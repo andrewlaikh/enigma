@@ -1,4 +1,3 @@
-#include <iostream>
 #include "engima.h"
 
 using namespace std;
@@ -19,7 +18,7 @@ public:
     in_stream >> num;
     while(!in_stream.eof())
     {
-      //INSERT file into pairings and make sure it works. 
+      //INSERT file into pairings and make sure it works.
       cout << num << endl;
       in_stream >> num;
     }
