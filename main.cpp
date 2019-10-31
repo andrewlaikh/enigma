@@ -1,8 +1,11 @@
 #include <iostream>
 #include <fstream>
-#include "engima.h"
+#include "enigma.h"
+#include "errors.h"
 
 using namespace std;
+
+//note the thing about returning erorr codes using the return statement
 
 int main(int argc, char** argv)
 {
@@ -13,6 +16,9 @@ int main(int argc, char** argv)
   // }
   plugBoard plugBoard;
   plugBoard.readFile(argv[1]);
+
+  reflector reflector;
+  reflector.readFile(argv[2]);
 
 
 

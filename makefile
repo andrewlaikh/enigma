@@ -1,8 +1,8 @@
 enigma: main.o enigma.o
-	g++ main.o enigma.o -o enigma 
+	g++ main.o enigma.o -o enigma
 
-main.o: main.cpp enigma.h
+main.o: main.cpp enigma.h errors.h
 	g++ -Wall -g -c main.cpp
 
-engima.o:enigma.cpp enigma.h
+engima.o:enigma.cpp enigma.h errors.h
 	g++ -Wall -g -c enigma.cpp
