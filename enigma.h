@@ -6,7 +6,7 @@
 
 using namespace std;
 
-//probably not the most elegant way to share output but it works 
+//probably not the most elegant way to share output but it works
 class plugBoard{
 public:
   friend class intermediateOutput;
@@ -42,9 +42,13 @@ class rotor{
 class intermediateOutput{
 public:
   vector<char> output;
-  void transform(const int &argNumber);
+  void transform(const int &argNumber, const vector<char> input);
+  //maybe rename this to convert?
   int letterToNumber(const char input);
   char numberToLetter(const char temp, const int tempNumber);
+  int plugBoardTransform(const int number);
+  int reflectorTransform(const int number);
+
 };
 
 

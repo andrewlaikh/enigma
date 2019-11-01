@@ -43,17 +43,18 @@ int main(int argc, char** argv)
     inputText inputText;
     check_error(inputText.readFile("input.txt"));
     // check_error(inputText.readFile((argc-1));
-    for (int i = 0; i < inputText.input.size(); i++)
+    for (unsigned int i = 0; i < inputText.input.size(); i++)
     {
       cout<< inputText.input.at(i);
     }
 
     //transform function using the intermediate ouput option. Shouldn't return any errors in the process.
-    intermediateOutput.transform(argc);
+    intermediateOutput intermediateOutput;
+    intermediateOutput.transform(argc, inputText.input);
 
     //output files. So, HOW do you output as a class?
-    outputText outputText
-    check_error(outputText.outputFile("output.txt", intermediateOutput.input()));
+    // outputText outputText;
+    // check_error(outputText.outputFile("output.txt", intermediateOutput.input()));
     // check_error(inputText.outputFile((argc));
   return 0;
 }

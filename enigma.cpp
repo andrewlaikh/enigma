@@ -227,27 +227,27 @@ int inputText::readFile(const string& argument)
   return 0;
 }
 
-int outputText::outputFile(const string &argument, const vector<char> input)
-{
-  ofstream of_stream;
-  of_stream.open(argument);
-  if(of_stream.fail())
-  {
-    return 11;
-  }
-  for (unsigned int i = 0; i < input.size())
-  char entry;
-  char entry;
-  return 0;
-}
+// int outputText::outputFile(const string &argument, const vector<char> input)
+// {
+//   ofstream of_stream;
+//   of_stream.open(argument);
+//   if(of_stream.fail())
+//   {
+//     return 11;
+//   }
+//   for (unsigned int i = 0; i < input.size())
+//   char entry;
+//   char entry;
+//   return 0;
+// }
 
-void intermediateOutput::transform(const int argNumber)
+void intermediateOutput::transform(const int &argNumber, const vector<char> input)
 {
   //iterate through every character and apply transformation
-  for (unsigned int i = 0; i < inputText.input.size(); i++)
+  for (unsigned int i = 0; i < input.size(); i++)
   {
     //now need to define a bunch of anciiliary functions to get desired output
-    char temp = inputText.input.at(i);
+    char temp = input.at(i);
 
     //SKIP if letter is false.
     if (isalpha(temp))
@@ -262,52 +262,81 @@ void intermediateOutput::transform(const int argNumber)
       // tempNumber = rotorBackwardsTransform(tempNumber, argNumber);
 
       //insert function to convert back from number to upper/lower
-      temp = numberToLetters(temp, tempNumber);
+      temp = numberToLetter(temp, tempNumber);
     }
     output.at(i) = temp;
   }
 }
 
-int intermediateOutput::plugBoardTransform(const char input)
+//REVIEW THIS TO CHECK IF YOU CAN ACCESS FRIEND MEMBER DATA OBJECTS. IF YOU CAN'T, THEN THE OLD FASHIONED WAY TO DO THIS IS TO PASS VALUE IN.
+int intermediateOutput::plugBoardTransform(const int tempNumber)
 {
   //convert input to number
   int number = letterToNumber(input);
   //conducting a simple iterative search through the board
   for (int i = 0; i < plugBoard.position; i++)
   {
-    int swapChar;
     if(number == plugBoard.position[i])
     {
       //convert output in accordance with requirements for plugboard
       if (i%2 == 0)
       {
         //if character is the first char in array pair
-        return (swapChar=plugBoard.position[i+1]);
+        return (plugBoard.position[i+1]);
       }
       if (i%2==1)
       {
         //if character is the second char in array pair
-        return(swapChar=plugBoard.position[i-1]);
+        return(plugBoard.position[i-1]);
       }
     }
   }
+}
 
+int intermediateOutput::reflectorTransform(const int tempNumber)
+{
+  //conducting a simple iterative search through the board
+  for (int i = 0; i < reflector.position; i++)
+  {
+    if(number == reflector.reflectorValues[i])
+    {
+      //convert output in accordance with requirements for plugboard
+      if (i%2 == 0)
+      {
+        //if character is the first char in array pair
+        return (reflector.reflectorValues[i+1]);
+      }
+      if (i%2==1)
+      {
+        //if character is the second char in array pair
+        return(reflector.reflectorValues[i-1]);
+      }
+    }
+  }
+}
 
 int intermediateOutput::letterToNumber(const char input)
 {
-  if(isupper(char))
+  if(isupper(input))
   {
-    return (static_cast<int>input - 65);
+    return (static_cast<int>(input) - 65);
   }
   else
   {
-    return (static_cast<int>input -97);
+    return (static_cast<int>(input) -97);
   }
 }
 
 char intermediateOutput::numberToLetter(const char temp, const int tempNumber)
 {
-
+  if(isupper(temp))
+  {
+    return (static_cast<char>(tempNumber + 65));
+  }
+  else
+  {
+    return (static_cast<char>(tempNumber + 97));
+  }
 }
 
   //
