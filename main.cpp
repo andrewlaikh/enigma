@@ -31,13 +31,13 @@ int main(int argc, char** argv)
     // reflector.readFile(argv[2]);
 
     //check number of rotor values
-    int rotorNumber = (argc - 6);
-    for(int i = 0; i < rotorNumber; i++)
-    {
-      //you can create a new array of objects that could work quite well as well. 
-      //read in rotor values for any number of rotors from left to right
-      check_error(rotor.rotorValues)
-    }
+    // int rotorNumber = (argc - 6);
+    // for(int i = 0; i < rotorNumber; i++)
+    // {
+    //   //you can create a new array of objects that could work quite well as well.
+    //   //read in rotor values for any number of rotors from left to right
+    //   check_error(rotor.rotorValues)
+    // }
 
     //check file for entry
     inputText inputText;
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     }
 
     //transform function using the intermediate ouput option. Shouldn't return any errors in the process.
-    intermediateOutput.transform(argc)
+    intermediateOutput.transform(argc);
 
     //output files. So, HOW do you output as a class?
     outputText outputText
