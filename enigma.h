@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "errors.h"
 
 using namespace std;
@@ -22,6 +23,23 @@ public:
   int reflectorValues[REFLECTOR_MAX];
   int position = 0;
 };
+
+class inputText{
+public:
+  vector<char> input;
+  int readFile(const string& argument);
+};
+
+class rotor{
+  vector<int> rotorValues;
+};
+
+class intermediateOutput{
+public:
+  vector<char> input;
+  void transform(input);
+};
+
 
 bool valueWithinRange(const int number);
 

@@ -1,11 +1,12 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "enigma.h"
 #include "errors.h"
 
 using namespace std;
 
-//note the thing about returning erorr codes using the return statement
+//thought process here is that the steer is towards using friend functions.
 
 int main(int argc, char** argv)
 {
@@ -14,7 +15,8 @@ int main(int argc, char** argv)
   // {
   //     cout << "You need to have more than 3 different arguments" << endl;
   // }
-  //REVIEW THROWING AND CATCHING IN MAIN
+  // REVIEW THROWING AND CATCHING IN MAIN
+
     plugBoard plugBoard;
     cout << "PB VALUES: "<< endl;
     check_error(plugBoard.readFile("plugboards/I.pb"));
@@ -28,10 +30,30 @@ int main(int argc, char** argv)
     //need to create a function here for plugboard to reflect values
     // reflector.readFile(argv[2]);
 
+    //check number of rotor values
+    int rotorNumber = (argc - 6);
+    for(int i = 0; i < rotorNumber; i++)
+    {
+      //you can create a new array of objects that could work quite well as well. 
+      //read in rotor values for any number of rotors from left to right
+      check_error(rotor.rotorValues)
+    }
 
     //check file for entry
-    //get input char by char and output
-    //complete the leftover
+    inputText inputText;
+    check_error(inputText.readFile("input.txt"));
+    // check_error(inputText.readFile((argc-1));
+    for (int i = 0; i < inputText.input.size(); i++)
+    {
+      cout<< inputText.input.at(i);
+    }
 
+    //transform function using the intermediate ouput option. Shouldn't return any errors in the process.
+    intermediateOutput.transform(argc)
+
+    //output files. So, HOW do you output as a class?
+    outputText outputText
+    check_error(outputText.outputFile("output.txt", intermediateOutput.input()));
+    // check_error(inputText.outputFile((argc));
   return 0;
 }

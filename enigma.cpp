@@ -69,10 +69,10 @@ int reflector::readFile(const string& argument)
       {
         return 3;
       }
-      if(invalidReflectorMapping(numberEntry, reflectorValues[], position)==true)
-      {
-        return 9;
-      }
+      // if(invalidReflectorMapping(numberEntry, reflectorValues[], position)==true)
+      // {
+      //   return 9;
+      // }
       //INSERT values into arrays
       reflectorValues[position] = numberEntry;
       if (checkChar(in_stream)==false)
@@ -145,20 +145,20 @@ bool invalidIndex(const int input)
     return false;
 }
 
+//
+// //to be completed
+// bool invalidReflectorMapping(const int input, const int position, const int& reflectorValues[])
+// {
+//   for (int i = 0; i < position; i++)
+//   {
+//     if(reflectorValues[i]==input)
+//     return true;
+//   }
+//   else
+//     return false;
+// }
 
-//to be completed
-bool invalidReflectorMapping(const int input, const int position, const int& reflectorValues[])
-{
-  for (int i = 0; i < position; i++)
-  {
-    if(reflectorValues[i]==input)
-    return true;
-  }
-  else
-    return false;
-}
-
-bool invalidReflectorMapping(const int input, const int position, const int& reflectorValues[])
+// bool invalidReflectorMapping(const int input, const int position, const int& reflectorValues[])
 
 
 void check_error(int input)
@@ -202,4 +202,40 @@ void check_error(int input)
     exit(1);
   }
   exit;
+}
+
+
+int inputText::readFile(const string& argument)
+{
+    ifstream in_stream;
+    in_stream.open(argument);
+    if(in_stream.fail())
+    {
+      return 11;
+    }
+
+    char entry;
+    //first line here trying to get first entry; WON'T enter if it fails.
+    in_stream >> noskipws >> entry;
+    while(!in_stream.eof())
+    {
+      input.push_back(entry);
+      in_stream >> noskipws >> entry;
+    }
+    in_stream.close();
+    return 0;
+}
+
+int outputText::outputFile(const string &argument, const vector<char> &input)
+{
+  ofstream of_stream;
+  of_stream.open(argument);
+  if(of_stream.fail())
+  {
+    return 11;
+  }
+  for (unsigned int i = 0; i < input.size())
+  char entry;
+  char entry;
+  return 0;
 }
