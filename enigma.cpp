@@ -256,8 +256,8 @@ void intermediateOutput::transform(const int &argNumber, const inputText &inputT
       int tempNumber = letterToNumber(temp);
       cout << "Initial Number: " << tempNumber << endl;
       tempNumber = plugBoardTransform(tempNumber, plugBoard);
-      //disable rotor xform first
-      // tempNumber = rotorTransform(tempNumber, argNumber);
+      cout << "Rotor transform number: " << tempNumber << endl;
+      tempNumber = rotorTransform(tempNumber);
       cout << "plugBoard Number: " << tempNumber << endl;
       tempNumber = reflectorTransform(tempNumber, reflector);
       cout << "reflectorTransform Number: " << tempNumber << endl;
@@ -339,3 +339,182 @@ char intermediateOutput::numberToLetter(const char temp, const int tempNumber)
     return (static_cast<char>(tempNumber + 97));
   }
 }
+
+int rotor::readFile(const string &argument)
+{
+  ifstream in_stream;
+  in_stream.open(argument);
+
+  //need to pass file as a function to be read. NOt elegant way, is there a better way?
+  if(in_stream.fail())
+  {
+    return 11;
+  }
+
+  int numberEntry;
+
+  //read in entries for the initial mapping
+  while(!in_stream.eof() && rotorValues.size() < 26)
+  {
+    in_stream >> ws;
+    in_stream >> numberEntry;
+    if (invalidIndex(numberEntry)==true)
+    {
+      return 3;
+    }
+    rotorValues.push_back(numberEntry);
+    //check for end of stream
+    if (checkChar(in_stream)==false)
+    {
+      return 4;
+    }
+  }
+
+  //read in entries for the initial entries
+  while(!in_stream.eof())
+  {
+    in_stream >> ws;
+    in_stream >> numberEntry;
+    if (invalidIndex(numberEntry)==true)
+    {
+      return 3;
+    }
+    rotorNotches.push_back(numberEntry);
+    if (checkChar(in_stream)==false)
+    {
+      return 4;
+    }
+  }
+
+  int count = 0;
+  cout << "Rotorpositions: " << endl;
+  for (int i = 0;i < rotorValues.size(); i++)
+  {
+    cout << rotorValues.at(i) << endl;
+    (count = count + 1);
+  }
+
+  cout << "COUNT: "<< count << endl;
+
+  cout << "Notchpositions: " << endl;
+  for (int i = 0;i < rotorNotches.size(); i++)
+  {
+    cout << rotorNotches.at(i) << endl;
+  }
+
+  in_stream.close();
+  return 0;
+}
+
+void intermediateOutput::copy(rotor rotorArray[], int rotorNumber)
+{
+  //resize so that rotorvalues can be input into rotor array 2d vector
+  rotorValues.resize(rotorNumber);
+  //resize so that rotorvalues can be input into rotor notches 2d vector
+  rotorNotches.resize(rotorNumber);
+
+  //copy values into 2-d vector
+  for(int i = 0; i < rotorNumber;i++)
+  {
+    for(int j=0; j<rotorArray[i].rotorValues.size(); j++)
+    {
+      int temp = rotorArray[0].rotorValues.at(j);
+      rotorValues[i].push_back(temp);
+    }
+
+    for(int j=0; j<rotorArray[i].rotorNotches.size(); j++)
+    {
+      rotorNotches[i].push_back(rotorArray[i].rotorNotches.at(j));
+    }
+  }
+
+  cout << "Rotor Number: " << endl;
+  for(int i = 0; i < rotorNumber;i++)
+  {
+    for(int j=0; j<rotorArray[i].rotorValues.size(); j++)
+    {
+      cout << rotorValues[i][j]<< endl;
+    }
+
+  }
+
+  cout << "Rotor Notches: " << endl;
+  for(int i = 0; i < rotorNumber;i++)
+  {
+  for(int j=0; j<rotorArray[i].rotorNotches.size(); j++)
+  {
+    cout << rotorNotches[i][j]<< endl;
+  }
+  }
+}
+
+
+int intermediateOutput::rotorTransform(const int tempNumber)
+{
+  //rotor config impact. BASICALLY
+  rotorPositionTransform(tempNumber);
+  rotateBackOne(tempNumber);
+  //second rotor and onwards action
+  for (int rotorNumber = 0; rotorNumber < rotorPositions.size(); rotorNumber++)
+  {
+    rotorWiringTransform(rotorNumber, tempNumber)
+    bool previous_notch = check_notch(rotorNumber);
+    if(previous_notch==true)
+    {
+      rotateBackOne(tempNumber);
+    }
+    tempNumber=convertValue(tempNumber);
+  }
+  return tempNumber;
+}
+
+void intermediateOutput::rotateBackOne(int &tempNumber)
+{
+  tempNumber = ((tempNumber + 1)%26);
+}
+
+void intermediateOutput::rotorWiringTransform(const int rotorNumber, int &tempNumber)
+{
+  tempNumber = rotorValues[rotorNumber][tempNumber];
+}
+
+
+//
+// int readRotorPosition(const string &argument, vector<int> rotorPosition)
+// {
+//   ifstream in_stream;
+//   in_stream.open(argument);
+//
+//   //need to pass file as a function to be read. NOt elegant way, is there a better way?
+//   if(in_stream.fail())
+//   {
+//     return 11;
+//   }
+//
+//   int numberEntry;
+//
+//   //not will's recommended solution but it works.
+//   while(!in_stream.eof())
+//   {
+//     in_stream >> ws;
+//     in_stream >> numberEntry;
+//     if (invalidIndex(numberEntry)==true)
+//     {
+//       return 3;
+//     }
+//     rotorPosition.push_back(numberEntry);
+//     if (checkChar(in_stream)==false)
+//     {
+//       return 4;
+//     }
+//   }
+//
+//   cout << "ROTOR POSITIONING: " << endl;
+//   //need to validate with the number of rotors in the program
+//   for (int i = 0;i < rotorPosition.size(); i++)
+//   {
+//     cout << rotorPosition.at(i) << endl;
+//   }
+//   in_stream.close();
+//   return 0;
+// }

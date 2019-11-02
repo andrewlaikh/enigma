@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <cctype>
+#include <algorithm>
 #include "errors.h"
 
 using namespace std;
@@ -12,10 +13,15 @@ class reflector;
 class inputText;
 class rotor;
 
-class intermediateOutput{
+class intermediateOutput
+{
 public:
+  //output to be written to file
   vector<char> output;
-  //view this function can be broken down
+  vector<int> rotorPositions;
+  //declare 2-d array to copy rotor values and positions
+  vector<vector<int>> rotorValues;
+  vector<vector<int>> rotorNotches;
   void transform(const int &argNumber, const inputText &inputText, const plugBoard &plugBoard, const reflector &reflector);
   //maybe rename this to convert?
   int letterToNumber(const char input);
@@ -23,8 +29,11 @@ public:
   //probably a better idea is to pass in the data members that you need bc it makes it less expensive to copy
   int reflectorTransform(const int number, const reflector &reflector);
   int plugBoardTransform(const int tempNumber, const plugBoard &plugBoard);
+  int rotorWiringTransform(const int tempNumber);
+  void copy(rotor rotorArray[], int rotorNumber);
+  void rotateBackOne(const int rotorNumber);
+  void convertValue(const int tempNumber);
 };
-
 
 //probably not the most elegant way to share output but it works
 class plugBoard{
@@ -54,12 +63,13 @@ public:
   int readFile(const string& argument);
 };
 
-//still need to pass in rotor so this is a bit clunky and should definitely be reworked.
 class rotor{
+public:
   friend class intermediateOutput;
-  vector<int> rotorPosition;
-  vector<int> notchPositions;
   int readFile(const string &argument);
+  int applyRotorTransformation(const vector<int> rotorPosition, const vector <int> notchPosition);
+  vector<int> rotorValues;
+  vector<int> rotorNotches;
 };
 
 
@@ -74,3 +84,5 @@ bool invalidIndex(const int input);
 bool checkChar(ifstream &in_stream);
 
 void check_error(int input);
+
+int readRotorPosition(const string &argument, vector<int> &rotorPosition, vector<int> &rotorNotches);
