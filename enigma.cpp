@@ -241,64 +241,65 @@ int inputText::readFile(const string& argument)
 //   return 0;
 // }
 
-void intermediateOutput::transform(const int &argNumber, const vector<char> input)
+void intermediateOutput::transform(const int &argNumber, const inputText &inputText, const plugBoard &plugBoard, const reflector &reflector)
 {
   //iterate through every character and apply transformation
-  for (unsigned int i = 0; i < input.size(); i++)
+  for (unsigned int i = 0; i < inputText.input.size(); i++)
   {
     //now need to define a bunch of anciiliary functions to get desired output
-    char temp = input.at(i);
+    char temp = inputText.input.at(i);
 
     //SKIP if letter is false.
     if (isalpha(temp))
     {
       //insert function to check if upper or lower
       int tempNumber = letterToNumber(temp);
-      tempNumber = plugBoardTransform(tempNumber);
+      cout << "Initial Number: " << tempNumber << endl;
+      tempNumber = plugBoardTransform(tempNumber, plugBoard);
       //disable rotor xform first
       // tempNumber = rotorTransform(tempNumber, argNumber);
-      tempNumber = reflectorTransform(tempNumber);
+      cout << "plugBoard Number: " << tempNumber << endl;
+      tempNumber = reflectorTransform(tempNumber, reflector);
+      cout << "reflectorTransform Number: " << tempNumber << endl;
       //disable rotor xform first
       // tempNumber = rotorBackwardsTransform(tempNumber, argNumber);
 
       //insert function to convert back from number to upper/lower
       temp = numberToLetter(temp, tempNumber);
     }
-    output.at(i) = temp;
+    output.push_back(temp);
   }
 }
 
-//REVIEW THIS TO CHECK IF YOU CAN ACCESS FRIEND MEMBER DATA OBJECTS. IF YOU CAN'T, THEN THE OLD FASHIONED WAY TO DO THIS IS TO PASS VALUE IN.
-int intermediateOutput::plugBoardTransform(const int tempNumber)
+int intermediateOutput::plugBoardTransform(const int tempNumber, const plugBoard &plugBoard)
 {
-  //convert input to number
-  int number = letterToNumber(input);
   //conducting a simple iterative search through the board
   for (int i = 0; i < plugBoard.position; i++)
   {
-    if(number == plugBoard.position[i])
+    if(tempNumber == plugBoard.plugBoardValues[i])
     {
       //convert output in accordance with requirements for plugboard
       if (i%2 == 0)
       {
-        //if character is the first char in array pair
-        return (plugBoard.position[i+1]);
+        //if character is the first char in array pair, then return the next value in the pair
+        return (plugBoard.plugBoardValues[(i+1)]);
       }
       if (i%2==1)
       {
         //if character is the second char in array pair
-        return(plugBoard.position[i-1]);
+        return(plugBoard.plugBoardValues[(i-1)]);
       }
     }
   }
+  return tempNumber;
 }
 
-int intermediateOutput::reflectorTransform(const int tempNumber)
+int intermediateOutput::reflectorTransform(const int tempNumber, const reflector &reflector)
 {
   //conducting a simple iterative search through the board
   for (int i = 0; i < reflector.position; i++)
   {
-    if(number == reflector.reflectorValues[i])
+    if(tempNumber == reflector.reflectorValues[i])
     {
       //convert output in accordance with requirements for plugboard
       if (i%2 == 0)
@@ -338,15 +339,3 @@ char intermediateOutput::numberToLetter(const char temp, const int tempNumber)
     return (static_cast<char>(tempNumber + 97));
   }
 }
-
-  //
-  // bool intermediateOutput::checkLetter(const char &input)
-  // {
-  //   int inputASCII=static_cast<int> (input);
-  //   if ((inputASCII>=64 && inputASCII <=91) || (inputASCII <=96 && inputASCII >=123))
-  //   {
-  //     return true;
-  //   }
-  //   else
-  //   return false;
-  // }

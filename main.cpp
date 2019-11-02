@@ -21,9 +21,9 @@ int main(int argc, char** argv)
     cout << "PB VALUES: "<< endl;
     check_error(plugBoard.readFile("plugboards/I.pb"));
     //need to create a function here for plugboard to reflect values
-
-
     // plugBoard.readFile(argv[1]);
+
+
     reflector reflector;
     cout << "RF VALUES: "<< endl;
     check_error(reflector.readFile("reflectors/I.rf"));
@@ -32,11 +32,11 @@ int main(int argc, char** argv)
 
     //check number of rotor values
     // int rotorNumber = (argc - 6);
-    // for(int i = 0; i < rotorNumber; i++)
+    //declare an array of rotors
+    // Rotor rotorArray[3];
+    // for(int i = 0; i < 3; i++)
     // {
-    //   //you can create a new array of objects that could work quite well as well.
-    //   //read in rotor values for any number of rotors from left to right
-    //   check_error(rotor.rotorValues)
+    //     rotorArray[i].readFile;
     // }
 
     //check file for entry
@@ -48,9 +48,12 @@ int main(int argc, char** argv)
       cout<< inputText.input.at(i);
     }
 
-    //transform function using the intermediate ouput option. Shouldn't return any errors in the process.
     intermediateOutput intermediateOutput;
-    intermediateOutput.transform(argc, inputText.input);
+    intermediateOutput.transform(argc, inputText, plugBoard, reflector);
+    for (unsigned int i = 0; i < intermediateOutput.output.size(); i++)
+    {
+      cout<< intermediateOutput.output.at(i);
+    }
 
     //output files. So, HOW do you output as a class?
     // outputText outputText;
