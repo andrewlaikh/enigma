@@ -451,7 +451,7 @@ void intermediateOutput::copy(rotor rotorArray[], int rotorNumber)
 
 int intermediateOutput::rotorTransform(const int tempNumber)
 {
-  //rotor config impact. BASICALLY
+  //rotor config impact. BASICALLY just ADD the position bc it affects the entry point from the outside. analogy is with rotoation and notches. 
   rotorPositionTransform(tempNumber);
   rotateBackOne(tempNumber);
   //second rotor and onwards action
