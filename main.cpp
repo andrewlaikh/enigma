@@ -30,9 +30,10 @@ int main(int argc, char** argv)
     //need to create a function here for plugboard to reflect values
     // reflector.readFile(argv[2]);
 
-    rotor rotorArray[2];
+    rotor rotorArray[3];
     check_error(rotorArray[0].readFile("rotors/I.rot"));
     check_error(rotorArray[1].readFile("rotors/II.rot"));
+    check_error(rotorArray[2].readFile("rotors/III.rot"));
 
 
 
@@ -55,8 +56,8 @@ int main(int argc, char** argv)
     //use the rotor array to get the final value to be accessed.
 
     //check file for entry
-    // inputText inputText;
-    // check_error(inputText.readFile("input.txt"));
+    inputText inputText;
+    check_error(inputText.readFile("input.txt"));
     // // check_error(inputText.readFile((argc-1));
     // for (unsigned int i = 0; i < inputText.input.size(); i++)
     // {
@@ -64,10 +65,10 @@ int main(int argc, char** argv)
     // }
     intermediateOutput intermediateOutput;
     //copy rotorarray into machine to be modified
-    intermediateOutput.copy(rotorArray, 2);
-    intermediateOutput.rotorPositions("rotors/I.pos"); 
+    intermediateOutput.copy(rotorArray, 3);
+    intermediateOutput.rotorPositionInput("rotors/I.pos");
 
-    intermediateOutput.transform(argc, inputText, plugBoard, reflector);
+    intermediateOutput.transformNoPBRF(argc, inputText);
     // for (unsigned int i = 0; i < intermediateOutput.output.size(); i++)
     // {
     //   cout<< intermediateOutput.output.at(i);

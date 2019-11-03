@@ -316,6 +316,30 @@ int intermediateOutput::reflectorTransform(const int tempNumber, const reflector
   }
 }
 
+
+void intermediateOutput::transformNoPBRF(const int &argNumber, const inputText &inputText)
+{
+  //iterate through every character and apply transformation
+  for (unsigned int i = 0; i < inputText.input.size(); i++)
+  {
+    //now need to define a bunch of anciiliary functions to get desired output
+    char temp = inputText.input.at(i);
+
+    //SKIP if letter is false.
+    if (isalpha(temp))
+    {
+      //insert function to check if upper or lower
+      int tempNumber = letterToNumber(temp);
+      cout << "Initial Number: " << tempNumber << endl;
+      tempNumber = rotorTransform(tempNumber);
+      cout << "Rotor OUTPUT: " << tempNumber << endl;
+      temp = numberToLetter(temp, tempNumber);
+    }
+    output.push_back(temp);
+  }
+}
+
+
 int intermediateOutput::letterToNumber(const char input)
 {
   if(isupper(input))
@@ -428,93 +452,120 @@ void intermediateOutput::copy(rotor rotorArray[], int rotorNumber)
     }
   }
 
-  cout << "Rotor Number: " << endl;
+  int count(0);
   for(int i = 0; i < rotorNumber;i++)
   {
     for(int j=0; j<rotorArray[i].rotorValues.size(); j++)
     {
-      cout << rotorValues[i][j]<< endl;
+      count++;
     }
-
   }
+  cout << "Rotor Number: " << count << endl;
 
-  cout << "Rotor Notches: " << endl;
+  count=0;
   for(int i = 0; i < rotorNumber;i++)
   {
-  for(int j=0; j<rotorArray[i].rotorNotches.size(); j++)
-  {
-    cout << rotorNotches[i][j]<< endl;
+    for(int j=0; j<rotorArray[i].rotorNotches.size(); j++)
+    {
+      count++;
+    }
   }
-  }
+  cout << "Rotor Notches: " << count << endl;
+
 }
 
 
-int intermediateOutput::rotorTransform(const int tempNumber)
+int intermediateOutput::rotorTransform(int tempNumber)
 {
-  //rotor config impact. BASICALLY just ADD the position bc it affects the entry point from the outside. analogy is with rotoation and notches. 
-  rotorPositionTransform(tempNumber);
-  rotateBackOne(tempNumber);
-  //second rotor and onwards action
-  for (int rotorNumber = 0; rotorNumber < rotorPositions.size(); rotorNumber++)
+  int max_rotor_number = rotorPositions.size();
+  cout << "max rotor number: " << max_rotor_number << endl;
+  for (int rotorNumber = 0; rotorNumber < max_rotor_number; rotorNumber++)
   {
-    rotorWiringTransform(rotorNumber, tempNumber)
-    bool previous_notch = check_notch(rotorNumber);
-    if(previous_notch==true)
+    //check if previous entry is notch. Excpet for first rotor where it's always rotated back one
+    if(previous_notch(rotorNumber)==true)
     {
-      rotateBackOne(tempNumber);
+      cout << "Notch " << rotorNumber -1 << " turned" << endl;
+      rotateBackOne(rotorNumber);
     }
-    tempNumber=convertValue(tempNumber);
+    //run number through wirint in absolute position
+    rotorWiringConvert(tempNumber, rotorNumber);
   }
   return tempNumber;
 }
 
-void intermediateOutput::rotateBackOne(int &tempNumber)
+void intermediateOutput::rotateBackOne(const int rotorNumber)
 {
-  tempNumber = ((tempNumber + 1)%26);
+  rotorPositions[rotorNumber] = ((rotorPositions.at(rotorNumber) + 1)%26);
+  cout << "rotatebackone number: " << rotorPositions[rotorNumber] << endl;
 }
 
-void intermediateOutput::rotorWiringTransform(const int rotorNumber, int &tempNumber)
+void intermediateOutput::rotorWiringConvert(int &tempNumber, const int rotorNumber)
 {
-  tempNumber = rotorValues[rotorNumber][tempNumber];
+  cout << "tempNumber: " <<tempNumber << " rotorPositions[rotorNumber]: " << rotorPositions[rotorNumber] << endl;
+  int absoluteEntryPosition = tempNumber + rotorPositions[rotorNumber];
+  cout << "abs entry: " << absoluteEntryPosition << endl;
+  tempNumber = rotorValues[rotorNumber][absoluteEntryPosition];
+  if (rotorNumber==1)
+  {
+    cout << "temp number ROTOR ONE: " << tempNumber <<   endl;
+  }
+}
+
+bool intermediateOutput::previous_notch(const int rotorNumber)
+{
+  if (rotorNumber > 0 )
+  {
+    for (int i = 0; i < rotorNotches[rotorNumber-1].size(); i++)
+    {
+      if(rotorNotches[(rotorNumber-1)][i] == rotorPositions[rotorNumber])
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  else
+  //bc first notch always turns
+    return true;
 }
 
 
-//
-// int readRotorPosition(const string &argument, vector<int> rotorPosition)
-// {
-//   ifstream in_stream;
-//   in_stream.open(argument);
-//
-//   //need to pass file as a function to be read. NOt elegant way, is there a better way?
-//   if(in_stream.fail())
-//   {
-//     return 11;
-//   }
-//
-//   int numberEntry;
-//
-//   //not will's recommended solution but it works.
-//   while(!in_stream.eof())
-//   {
-//     in_stream >> ws;
-//     in_stream >> numberEntry;
-//     if (invalidIndex(numberEntry)==true)
-//     {
-//       return 3;
-//     }
-//     rotorPosition.push_back(numberEntry);
-//     if (checkChar(in_stream)==false)
-//     {
-//       return 4;
-//     }
-//   }
-//
-//   cout << "ROTOR POSITIONING: " << endl;
-//   //need to validate with the number of rotors in the program
-//   for (int i = 0;i < rotorPosition.size(); i++)
-//   {
-//     cout << rotorPosition.at(i) << endl;
-//   }
-//   in_stream.close();
-//   return 0;
-// }
+
+int intermediateOutput::rotorPositionInput(const string &argument)
+{
+  ifstream in_stream;
+  in_stream.open(argument);
+
+  //need to pass file as a function to be read. NOt elegant way, is there a better way?
+  if(in_stream.fail())
+  {
+    return 11;
+  }
+
+  int numberEntry;
+
+  //not will's recommended solution but it works.
+  while(!in_stream.eof())
+  {
+    in_stream >> ws;
+    in_stream >> numberEntry;
+    if (invalidIndex(numberEntry)==true)
+    {
+      return 3;
+    }
+    rotorPositions.push_back(numberEntry);
+    if (checkChar(in_stream)==false)
+    {
+      return 4;
+    }
+  }
+
+  cout << "ROTOR POSITIONING: " << endl;
+  //need to validate with the number of rotors in the program
+  for (int i = 0;i < rotorPositions.size(); i++)
+  {
+    cout << rotorPositions.at(i) << endl;
+  }
+  in_stream.close();
+  return 0;
+}

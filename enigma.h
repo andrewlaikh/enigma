@@ -22,6 +22,9 @@ public:
   //declare 2-d array to copy rotor values and positions
   vector<vector<int>> rotorValues;
   vector<vector<int>> rotorNotches;
+  //TEMP FUNCTION
+  void transformNoPBRF(const int &argNumber, const inputText &inputText); 
+
   void transform(const int &argNumber, const inputText &inputText, const plugBoard &plugBoard, const reflector &reflector);
   //maybe rename this to convert?
   int letterToNumber(const char input);
@@ -29,10 +32,13 @@ public:
   //probably a better idea is to pass in the data members that you need bc it makes it less expensive to copy
   int reflectorTransform(const int number, const reflector &reflector);
   int plugBoardTransform(const int tempNumber, const plugBoard &plugBoard);
-  int rotorWiringTransform(const int tempNumber);
   void copy(rotor rotorArray[], int rotorNumber);
+  int rotorTransform(int tempNumber);
+  int rotorPositionInput(const string &argument);
   void rotateBackOne(const int rotorNumber);
-  void convertValue(const int tempNumber);
+  void rotorPositionSet(const int rotorNumber, int &tempNumber);
+  void rotorWiringConvert(int &tempNumber, const int rotorNumber);
+  bool previous_notch(const int rotorNumber);
 };
 
 //probably not the most elegant way to share output but it works
