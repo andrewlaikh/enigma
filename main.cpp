@@ -30,9 +30,9 @@ int main(int argc, char** argv)
     // reflector.readFile(argv[2]);
 
     rotor rotorArray[3];
-    check_error(rotorArray[0].readFile("rotors/I.rot"));
-    check_error(rotorArray[1].readFile("rotors/II.rot"));
-    check_error(rotorArray[2].readFile("rotors/III.rot"));
+    check_error(rotorArray[0].readFile("rotors/IV.rot"));
+    check_error(rotorArray[1].readFile("rotors/III.rot"));
+    check_error(rotorArray[2].readFile("rotors/II.rot"));
 
     //TBC: Check number of rotor values
   //   //declare an array of rotors
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     intermediateOutput intermediateOutput;
     //copy rotorarray into machine to be modified
     intermediateOutput.copy(rotorArray, 3);
-    intermediateOutput.rotorPositionInput("rotors/I.pos");
+    intermediateOutput.rotorPositionInput("rotors/III.pos");
     intermediateOutput.transform(argc, inputText, plugBoard, reflector);
 
     for(unsigned int i = 0; i < intermediateOutput.output.size(); i++)

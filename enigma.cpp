@@ -520,7 +520,7 @@ void intermediateOutput::rotorWiringConvert(int &tempNumber, const int rotorNumb
   cout << "tempNumber: " <<tempNumber << " rotorPositions[rotorNumber]: " << rotorPositions[rotorNumber] << endl;
   int absoluteEntryPosition = (tempNumber + rotorPositions[rotorNumber]) % 26;
   cout << "abs entry: " << absoluteEntryPosition << endl;
-  tempNumber = rotorValues[rotorNumber][absoluteEntryPosition] - rotorPositions[rotorNumber];
+  tempNumber = (rotorValues[rotorNumber][absoluteEntryPosition] - rotorPositions[rotorNumber]);
   //hard code to prevent negative numberEntry
   if (tempNumber < 0)
   {
