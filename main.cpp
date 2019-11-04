@@ -10,12 +10,11 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-  // check if there are more than 3 different arguments
-  // if (argc < 4)
-  // {
-  //     cout << "You need to have more than 3 different arguments" << endl;
-  // }
-  // REVIEW THROWING AND CATCHING IN MAIN
+    // check if there are more than 3 different arguments
+    // if (argc < 4)
+    // {
+    //     cout << "You need to have more than 3 different arguments" << endl;
+    // }
 
     plugBoard plugBoard;
     cout << "PB VALUES: "<< endl;
@@ -34,10 +33,6 @@ int main(int argc, char** argv)
     check_error(rotorArray[0].readFile("rotors/I.rot"));
     check_error(rotorArray[1].readFile("rotors/II.rot"));
     check_error(rotorArray[2].readFile("rotors/III.rot"));
-
-
-
-
 
     //TBC: Check number of rotor values
   //   //declare an array of rotors
@@ -67,16 +62,17 @@ int main(int argc, char** argv)
     //copy rotorarray into machine to be modified
     intermediateOutput.copy(rotorArray, 3);
     intermediateOutput.rotorPositionInput("rotors/I.pos");
+    intermediateOutput.transform(argc, inputText, plugBoard, reflector);
 
-    intermediateOutput.transformNoPBRF(argc, inputText);
-    // for (unsigned int i = 0; i < intermediateOutput.output.size(); i++)
-    // {
-    //   cout<< intermediateOutput.output.at(i);
-    // }
+    for(unsigned int i = 0; i < intermediateOutput.output.size(); i++)
+    {
+      cout << intermediateOutput.output.at(i);
+    }
 
-    //output files. So, HOW do you output as a class?
+    // intermediateOutput.transformNoPBRF(argc, inputText);
+    //
     // outputText outputText;
-    // check_error(outputText.outputFile("output.txt", intermediateOutput.input()));
+    // check_error(outputText.outputFile("output.txt", intermediateOutput.output));
     // check_error(inputText.outputFile((argc));
   return 0;
 }

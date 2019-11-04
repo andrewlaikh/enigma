@@ -23,7 +23,7 @@ public:
   vector<vector<int>> rotorValues;
   vector<vector<int>> rotorNotches;
   //TEMP FUNCTION
-  void transformNoPBRF(const int &argNumber, const inputText &inputText); 
+  void transformNoPBRF(const int &argNumber, const inputText &inputText);
 
   void transform(const int &argNumber, const inputText &inputText, const plugBoard &plugBoard, const reflector &reflector);
   //maybe rename this to convert?
@@ -32,18 +32,23 @@ public:
   //probably a better idea is to pass in the data members that you need bc it makes it less expensive to copy
   int reflectorTransform(const int number, const reflector &reflector);
   int plugBoardTransform(const int tempNumber, const plugBoard &plugBoard);
+  //functions associated with setting up rotor
   void copy(rotor rotorArray[], int rotorNumber);
-  int rotorTransform(int tempNumber);
   int rotorPositionInput(const string &argument);
+  //functions associated with rotor transformation
+  int rotorForwardTransform(int tempNumber);
+  int rotorReverseTransform(int tempNumber);
   void rotateBackOne(const int rotorNumber);
   void rotorPositionSet(const int rotorNumber, int &tempNumber);
   void rotorWiringConvert(int &tempNumber, const int rotorNumber);
+  void rotorReverseWiringConvert(int &tempNumber, const int rotorNumber);
   bool previous_notch(const int rotorNumber);
 };
 
 //probably not the most elegant way to share output but it works
 class plugBoard{
 public:
+  friend class outputText;
   friend int intermediateOutput::plugBoardTransform(const int number, const plugBoard &plugBoard);
   int readFile(const string& argument);
   // check if use of static here is correct
@@ -68,6 +73,10 @@ public:
   vector<char> input;
   int readFile(const string& argument);
 };
+//
+// class outputText{
+//   void outputFile(const string argc, vector<char> output);
+// };
 
 class rotor{
 public:

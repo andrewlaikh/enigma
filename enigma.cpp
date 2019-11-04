@@ -257,12 +257,13 @@ void intermediateOutput::transform(const int &argNumber, const inputText &inputT
       cout << "Initial Number: " << tempNumber << endl;
       tempNumber = plugBoardTransform(tempNumber, plugBoard);
       cout << "Rotor transform number: " << tempNumber << endl;
-      tempNumber = rotorTransform(tempNumber);
+      tempNumber = rotorForwardTransform(tempNumber);
       cout << "plugBoard Number: " << tempNumber << endl;
       tempNumber = reflectorTransform(tempNumber, reflector);
       cout << "reflectorTransform Number: " << tempNumber << endl;
-      //disable rotor xform first
-      // tempNumber = rotorBackwardsTransform(tempNumber, argNumber);
+      tempNumber = rotorReverseTransform(tempNumber);
+      //CHECK but it should be the case tht value goes through the plugboard again.
+      tempNumber = plugBoardTransform(tempNumber, plugBoard);
 
       //insert function to convert back from number to upper/lower
       temp = numberToLetter(temp, tempNumber);
@@ -331,12 +332,25 @@ void intermediateOutput::transformNoPBRF(const int &argNumber, const inputText &
       //insert function to check if upper or lower
       int tempNumber = letterToNumber(temp);
       cout << "Initial Number: " << tempNumber << endl;
-      tempNumber = rotorTransform(tempNumber);
+      tempNumber = rotorForwardTransform(tempNumber);
+      tempNumber = rotorReverseTransform(tempNumber);
       cout << "Rotor OUTPUT: " << tempNumber << endl;
       temp = numberToLetter(temp, tempNumber);
     }
     output.push_back(temp);
   }
+}
+
+int intermediateOutput::rotorReverseTransform(int tempNumber)
+{
+  int max_rotor_number = rotorPositions.size();
+  int count (0);
+  for (int rotorNumber=max_rotor_number; rotorNumber > 0 ; rotorNumber--)
+  {
+    cout <<"COUNT: " << rotorNumber << endl;
+    rotorReverseWiringConvert(tempNumber, (rotorNumber-1));
+  }
+  return tempNumber;
 }
 
 
@@ -442,7 +456,7 @@ void intermediateOutput::copy(rotor rotorArray[], int rotorNumber)
   {
     for(int j=0; j<rotorArray[i].rotorValues.size(); j++)
     {
-      int temp = rotorArray[0].rotorValues.at(j);
+      int temp = rotorArray[i].rotorValues.at(j);
       rotorValues[i].push_back(temp);
     }
 
@@ -455,9 +469,10 @@ void intermediateOutput::copy(rotor rotorArray[], int rotorNumber)
   int count(0);
   for(int i = 0; i < rotorNumber;i++)
   {
+    cout << "Rotor Number: " << (i+1) << endl;
     for(int j=0; j<rotorArray[i].rotorValues.size(); j++)
     {
-      count++;
+      cout << rotorValues[i][j] << endl;
     }
   }
   cout << "Rotor Number: " << count << endl;
@@ -475,7 +490,7 @@ void intermediateOutput::copy(rotor rotorArray[], int rotorNumber)
 }
 
 
-int intermediateOutput::rotorTransform(int tempNumber)
+int intermediateOutput::rotorForwardTransform(int tempNumber)
 {
   int max_rotor_number = rotorPositions.size();
   cout << "max rotor number: " << max_rotor_number << endl;
@@ -495,6 +510,7 @@ int intermediateOutput::rotorTransform(int tempNumber)
 
 void intermediateOutput::rotateBackOne(const int rotorNumber)
 {
+  //rotor position is INFORMED with notch movement
   rotorPositions[rotorNumber] = ((rotorPositions.at(rotorNumber) + 1)%26);
   cout << "rotatebackone number: " << rotorPositions[rotorNumber] << endl;
 }
@@ -502,23 +518,56 @@ void intermediateOutput::rotateBackOne(const int rotorNumber)
 void intermediateOutput::rotorWiringConvert(int &tempNumber, const int rotorNumber)
 {
   cout << "tempNumber: " <<tempNumber << " rotorPositions[rotorNumber]: " << rotorPositions[rotorNumber] << endl;
-  int absoluteEntryPosition = tempNumber + rotorPositions[rotorNumber];
+  int absoluteEntryPosition = (tempNumber + rotorPositions[rotorNumber]) % 26;
   cout << "abs entry: " << absoluteEntryPosition << endl;
-  tempNumber = rotorValues[rotorNumber][absoluteEntryPosition];
-  if (rotorNumber==1)
+  tempNumber = rotorValues[rotorNumber][absoluteEntryPosition] - rotorPositions[rotorNumber];
+  //hard code to prevent negative numberEntry
+  if (tempNumber < 0)
   {
-    cout << "temp number ROTOR ONE: " << tempNumber <<   endl;
+    tempNumber = tempNumber + 26;
   }
 }
 
+void intermediateOutput::rotorReverseWiringConvert(int &tempNumber, const int rotorNumber)
+{
+  cout << "tempNumber: " <<tempNumber << " rotorPositions[rotorNumber]: " << rotorPositions[rotorNumber] << endl;
+  int absoluteEntryPosition = ((tempNumber + rotorPositions[rotorNumber])%26);
+  cout << "abs entry: " << absoluteEntryPosition << endl;
+  if (rotorNumber ==0)
+  {
+    cout << "rotor values: " << endl;
+  }
+  for(unsigned int i = 0; i < rotorValues[rotorNumber].size(); i++)
+  {
+    if (rotorNumber == 0)
+    {
+      cout << rotorValues[rotorNumber][i] << endl;
+    }
+    if(absoluteEntryPosition == rotorValues[rotorNumber][i])
+    {
+      tempNumber = (i - rotorPositions[rotorNumber]);
+    }
+  }
+  //hard code to prevent negative numberEntry
+  if (tempNumber < 0)
+  {
+    tempNumber = tempNumber + 26;
+  }
+  cout << "REVERSE TRANSFORM TEMPNUMBER: " << tempNumber << endl;
+}
+
+
+
+//previous notch should be ok.
 bool intermediateOutput::previous_notch(const int rotorNumber)
 {
   if (rotorNumber > 0 )
   {
     for (int i = 0; i < rotorNotches[rotorNumber-1].size(); i++)
     {
-      if(rotorNotches[(rotorNumber-1)][i] == rotorPositions[rotorNumber])
+      if(rotorNotches[(rotorNumber-1)][i] == rotorPositions[rotorNumber-1])
       {
+        cout << "NOTCH HIT!" << endl;
         return true;
       }
     }
